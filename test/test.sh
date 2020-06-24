@@ -15,9 +15,9 @@ failures=0
 total=0
 mydir=$(pwd)
 if [ -z "$1" ]; then
-    styles_to_test=$(echo ../[0-9][0-9]-*)
+    styles_to_test=$(echo ../[0-9][0-9]_*)
 else
-    styles_to_test=../$1-*
+    styles_to_test=../$1_*
 fi
 
 files=$(echo *.txt)
