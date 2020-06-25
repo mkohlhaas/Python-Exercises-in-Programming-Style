@@ -21,3 +21,6 @@ Possible names:
 - Go-Forth (as in the Forth programming language)
 - Stack machine
 
+This example is completely useless. Stack should only have push() and pop() methods.
+Code uses an array with indexing, append() and extend() method.
+Then you have a dictionary, called heap, that does all the heavy-lifting.
