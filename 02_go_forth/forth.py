@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 #
 #   f o r t h . p y
 #   Author: Chris Meyers @

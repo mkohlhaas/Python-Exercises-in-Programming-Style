@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import sys, operator, string, os, threading, re
 from util import getch, cls, get_input
 from time import sleep

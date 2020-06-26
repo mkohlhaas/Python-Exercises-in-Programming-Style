@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import re, string, sys
 
 stops = set(open("../stop_words.txt").read().split(",") + list(string.ascii_lowercase))

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import re, sys, operator, queue, threading
 
 # Two data spaces

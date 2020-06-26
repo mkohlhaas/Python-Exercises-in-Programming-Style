@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # My golf score is slightly lower!  
 # Best wishes, Peter Norvig
 import re, sys, collections

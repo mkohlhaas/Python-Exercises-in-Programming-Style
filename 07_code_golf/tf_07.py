@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import heapq, re, sys
 
 words = re.findall("[a-z]{2,}", open(sys.argv[1]).read().lower())

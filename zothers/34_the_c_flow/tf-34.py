@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import sys, re, operator, string, inspect
 
 # Reusing the defensive style program to illustrate this
