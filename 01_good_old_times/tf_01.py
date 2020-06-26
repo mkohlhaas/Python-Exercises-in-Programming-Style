@@ -1,9 +1,9 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python3
 """Calculate term frequency."""
 
 import os
 import sys
+
 
 def touchopen(filename, *args, **kwargs):
     """Utility for handling the intermediate 'secondary memory'"""
@@ -11,8 +11,9 @@ def touchopen(filename, *args, **kwargs):
         os.remove(filename)
     except OSError:
         pass
-    open(filename, "a").close() # "touch" file
+    open(filename, "a").close()  # "touch" file
     return open(filename, *args, **kwargs)
+
 
 # The constrained memory should have no more than 1024 cells
 DATA = []
@@ -35,16 +36,16 @@ DATA = []
 
 # Load the list of stop words
 STOP_WORDS_FILE = open('../stop_words.txt')
-DATA = [STOP_WORDS_FILE.read(1024).split(',')] # DATA[0] holds the stop words
+DATA = [STOP_WORDS_FILE.read(1024).split(',')]  # DATA[0] holds the stop words
 STOP_WORDS_FILE.close()
 
-DATA.append([])    # DATA[1] is line (max 80 characters)
+DATA.append([])  # DATA[1] is line (max 80 characters)
 DATA.append(None)  # DATA[2] is index of the start_char of word
-DATA.append(0)     # DATA[3] is index on characters, i = 0
-DATA.append(False) # DATA[4] is flag indicating if word was found
-DATA.append('')    # DATA[5] is the word
-DATA.append('')    # DATA[6] is word,NNNN
-DATA.append(0)     # DATA[7] is frequency
+DATA.append(0)  # DATA[3] is index on characters, i = 0
+DATA.append(False)  # DATA[4] is flag indicating if word was found
+DATA.append('')  # DATA[5] is the word
+DATA.append('')  # DATA[6] is word,NNNN
+DATA.append(0)  # DATA[7] is frequency
 
 # Open the secondary memory
 WORD_FREQS = touchopen('WORD_FREQS', 'rb+')
@@ -53,14 +54,14 @@ INPUT_FILE = open(sys.argv[1], 'r')
 # Loop over input file's lines
 while True:
     DATA[1] = [INPUT_FILE.readline()]
-    if DATA[1] == ['']: # end of input file
+    if DATA[1] == ['']:  # end of input file
         break
-    if DATA[1][0][len(DATA[1][0])-1] != '\n': # If it does not end with \n
-        DATA[1][0] = DATA[1][0] + '\n' # Add \n
+    if DATA[1][0][len(DATA[1][0]) - 1] != '\n':  # If it does not end with \n
+        DATA[1][0] = DATA[1][0] + '\n'  # Add \n
     DATA[2] = None
     DATA[3] = 0
     # Loop over characters in the line
-    for c in DATA[1][0]: # elimination of symbol c is exercise
+    for c in DATA[1][0]:  # elimination of symbol c is exercise
         if DATA[2] is None:
             if c.isalnum():
                 # We found the start of a word
@@ -85,11 +86,13 @@ while True:
                             DATA[4] = True
                             break
                     if not DATA[4]:
-                        WORD_FREQS.seek(0, 1) # Needed in Windows
-                        WORD_FREQS.write(bytes("%20s,%04d\n" % (DATA[5], 1), 'utf-8'))
+                        WORD_FREQS.seek(0, 1)  # Needed in Windows
+                        WORD_FREQS.write(
+                            bytes("%20s,%04d\n" % (DATA[5], 1), 'utf-8'))
                     else:
                         WORD_FREQS.seek(-26, 1)
-                        WORD_FREQS.write(bytes("%20s,%04d\n" % (DATA[5], DATA[7]), 'utf-8'))
+                        WORD_FREQS.write(
+                            bytes("%20s,%04d\n" % (DATA[5], DATA[7]), 'utf-8'))
                     WORD_FREQS.seek(0, 0)
                 # Let's reset
                 DATA[2] = None
@@ -104,25 +107,25 @@ WORD_FREQS.flush()
 del DATA[:]
 
 # Let's use the first 25 entries for the top 25 words
-DATA = DATA + [[]]*(25 - len(DATA))
-DATA.append('') # DATA[25] is word,freq from file
+DATA = DATA + [[]] * (25 - len(DATA))
+DATA.append('')  # DATA[25] is word,freq from file
 DATA.append(0)  # DATA[26] is freq
 
 # Loop over secondary memory file
 while True:
     DATA[25] = str(WORD_FREQS.readline().strip(), 'utf-8')
-    if DATA[25] == '': # EOF
+    if DATA[25] == '':  # EOF
         break
-    DATA[26] = int(DATA[25].split(',')[1]) # Read it as integer
-    DATA[25] = DATA[25].split(',')[0].strip() # word
+    DATA[26] = int(DATA[25].split(',')[1])  # Read it as integer
+    DATA[25] = DATA[25].split(',')[0].strip()  # word
     # Check if this word has more counts than the ones in memory
-    for i in range(25): # elimination of symbol i is exercise
+    for i in range(25):  # elimination of symbol i is exercise
         if DATA[i] == [] or DATA[i][1] < DATA[26]:
             DATA.insert(i, [DATA[25], DATA[26]])
-            del DATA[26] #  delete the last element
+            del DATA[26]  #  delete the last element
             break
 
-for tf in DATA[0:25]: # elimination of symbol tf is exercise
+for tf in DATA[0:25]:  # elimination of symbol tf is exercise
     if len(tf) == 2:
         print(tf[0], '-', tf[1])
 # We're done

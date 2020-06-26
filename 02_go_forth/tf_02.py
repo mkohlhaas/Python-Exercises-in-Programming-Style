@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python3
 """Calculate term frequency."""
 
 import operator
@@ -17,6 +16,7 @@ STACK = []
 #
 HEAP = {}
 
+
 #
 # The new "words" (procedures) of our program
 #
@@ -29,6 +29,7 @@ def read_file():
     STACK.append([input_file.read()])
     input_file.close()
 
+
 def filter_chars():
     """
     Takes data on the stack and places back a copy with all
@@ -40,6 +41,7 @@ def filter_chars():
     # Push the result onto the stack
     STACK.append([STACK.pop().sub(' ', STACK.pop()[0]).lower()])
 
+
 def scan():
     """
     Takes a string on the stack and scans for words, placing
@@ -48,6 +50,7 @@ def scan():
     # Again, split() is too high-level for this style, but using
     # it for doing this fast and short. Left as exercise.
     STACK.extend(STACK.pop()[0].split())
+
 
 def remove_stop_words():
     """
@@ -64,12 +67,13 @@ def remove_stop_words():
     HEAP['words'] = []
     while len(STACK) > 0:
         if STACK[-1] in HEAP['stop_words']:
-            STACK.pop() # pop it and drop it
+            STACK.pop()  # pop it and drop it
         else:
-            HEAP['words'].append(STACK.pop()) # pop it, store it
-    STACK.extend(HEAP['words']) # Load the words onto the stack
-    del HEAP['stop_words'] # Not needed
+            HEAP['words'].append(STACK.pop())  # pop it, store it
+    STACK.extend(HEAP['words'])  # Load the words onto the stack
+    del HEAP['stop_words']  # Not needed
     del HEAP['words']
+
 
 def frequencies():
     """
@@ -83,17 +87,18 @@ def frequencies():
         # naive implementation would be too slow
         if STACK[-1] in HEAP['word_freqs']:
             # Increment the frequency, postfix style: f 1 +
-            STACK.append(HEAP['word_freqs'][STACK[-1]]) # push f
-            STACK.append(1) # push 1
-            STACK.append(STACK.pop() + STACK.pop()) # add
+            STACK.append(HEAP['word_freqs'][STACK[-1]])  # push f
+            STACK.append(1)  # push 1
+            STACK.append(STACK.pop() + STACK.pop())  # add
         else:
-            STACK.append(1) # Push 1 in STACK[2]
+            STACK.append(1)  # Push 1 in STACK[2]
         # Load the updated freq back onto the heap
         HEAP['word_freqs'][STACK.pop()] = STACK.pop()
 
     # Push the result onto the stack
     STACK.append(HEAP['word_freqs'])
-    del HEAP['word_freqs'] # We don't need this variable anymore
+    del HEAP['word_freqs']  # We don't need this variable anymore
+
 
 def sort():
     """
@@ -101,6 +106,7 @@ def sort():
     """
     # Not in style, left as exercise
     STACK.extend(sorted(STACK.pop().items(), key=operator.itemgetter(1)))
+
 
 if __name__ == "__main__":
     STACK.append(sys.argv[1])
