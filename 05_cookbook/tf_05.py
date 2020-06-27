@@ -1,87 +1,87 @@
 #!/usr/bin/python3
-import sys, string
+"""Calculate term frequency."""
 
-# The shared mutable data
-data = []
-words = []
-word_freqs = []
+import sys
+import string
 
-#
-# The procedures
-#
+
 def read_file(path_to_file):
     """
-    Takes a path to a file and assigns the entire
-    contents of the file to the global variable data
+    Load file into data
     """
-    global data
-    with open(path_to_file) as f:
-        data = data + list(f.read())
+    data = []
+    with open(path_to_file) as input_file:
+        data = data + list(input_file.read())
+    return data
 
-def filter_chars_and_normalize():
+
+def filter_chars_and_normalize(data):
     """
     Replaces all nonalphanumeric chars in data with white space
     """
-    global data
-    for i in range(len(data)):
-        if not data[i].isalnum():
+    for i, char in enumerate(data):
+        if not char.isalnum():
             data[i] = ' '
         else:
             data[i] = data[i].lower()
 
-def scan():
+
+def scan(data):
     """
-    Scans data for words, filling the global variable words
+    Scans data for words, filling the global variable WORDS
     """
-    global data
-    global words
+    words = []
     data_str = ''.join(data)
     words = words + data_str.split()
+    return words
 
-def remove_stop_words():
-    global words
-    with open('../stop_words.txt') as f:
-        stop_words = f.read().split(',')
-    # add single-letter words
+
+def remove_stop_words(words):
+    """
+    Remove stop words and single letter words from WORDS
+    """
+    with open('../stop_words.txt') as stop_words_file:
+        stop_words = stop_words_file.read().split(',')
+    # single-letter words are also stop_words
     stop_words.extend(list(string.ascii_lowercase))
     indexes = []
-    for i in range(len(words)):
-        if words[i] in stop_words:
+    for i, word in enumerate(words):
+        if word in stop_words:
             indexes.append(i)
     for i in reversed(indexes):
         words.pop(i)
+    return words
 
-def frequencies():
+
+def frequencies(words):
     """
-    Creates a list of pairs associating
-    words with frequencies
+    Creates a list of word and frequency pairs
     """
-    global words
-    global word_freqs
-    for w in words:
+    word_freqs = []
+    for word in words:
         keys = [wd[0] for wd in word_freqs]
-        if w in keys:
-            word_freqs[keys.index(w)][1] += 1
+        if word in keys:
+            word_freqs[keys.index(word)][1] += 1
         else:
-            word_freqs.append([w, 1])
+            word_freqs.append([word, 1])
+    return word_freqs
 
-def sort():
+
+def sort(word_freqs):
     """
-    Sorts word_freqs by frequency
+    Sorts WORD_FREQS by frequency
     """
-    global word_freqs
     word_freqs.sort(key=lambda x: x[1], reverse=True)
+    return word_freqs
 
 
-#
-# The main function
-#
-read_file(sys.argv[1])
-filter_chars_and_normalize()
-scan()
-remove_stop_words()
-frequencies()
-sort()
+if __name__ == "__main__":
+    INPUT_DATA = read_file(sys.argv[1])
+    filter_chars_and_normalize(INPUT_DATA)
+    WORDS = scan(INPUT_DATA)
+    remove_stop_words(WORDS)
+    WORD_FREQS = frequencies(WORDS)
+    sort(WORD_FREQS)
 
-for tf in word_freqs[0:25]:
-    print(tf[0], '-', tf[1])
+    for tf in WORD_FREQS[0:25]:
+        print(tf[0], '-', tf[1])
